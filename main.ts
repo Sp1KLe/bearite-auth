@@ -1,13 +1,15 @@
 /**
  * Аккаунты Bearite на Deno Deploy: регистрация, вход, проверка токена.
  * Данные лежат в встроенной базе Deno KV. Пароли хранятся как PBKDF2-SHA256, токены — JWT HS256.
- * Переменные окружения: JWT_SECRET (не короче 32 символов).
+ * Переменные окружения: JWT_SECRET (не короче 32 символов), KV_URL и DENO_KV_ACCESS_TOKEN (для облачной базы).
  */
 
 const ITERATIONS = 210_000;
 const TOKEN_TTL_SEC = 7 * 24 * 3600;
 const encoder = new TextEncoder();
-const kv = await Deno.openKv();
+// Если задан KV_URL (адрес удалённой базы Deno KV), данные хранятся в облаке и не теряются при перезапуске.
+// Токен для доступа берётся из DENO_KV_ACCESS_TOKEN.
+const kv = await Deno.openKv(Deno.env.get("KV_URL") || undefined);
 
 function json(body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), {
