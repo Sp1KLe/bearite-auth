@@ -177,7 +177,7 @@ async function me(req: Request): Promise<Response> {
   return json({ user: publicUser(userEntry.value) });
 }
 
-Deno.serve(async (req) => {
+Deno.serve({ port: Number(Deno.env.get("PORT") ?? 8000), hostname: "0.0.0.0" }, async (req) => {
   const url = new URL(req.url);
   if (req.method === "GET" && url.pathname === "/health") return json({ ok: true });
   if (req.method === "POST" && url.pathname === "/api/auth/register") return register(req);
