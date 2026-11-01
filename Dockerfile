@@ -3,4 +3,4 @@ WORKDIR /app
 COPY . .
 RUN deno cache main.ts
 ENV PORT=10000
-CMD ["run", "--allow-net", "--allow-env", "--allow-read", "--allow-write", "main.ts"]
+CMD ["run", "--allow-net", "--allow-env", "--allow-read", "--allow-write", "--unstable-kv", "main.ts"]
